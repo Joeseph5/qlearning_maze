@@ -1,4 +1,5 @@
 import random
+import math
 
 class Robot(object):
 
@@ -48,11 +49,13 @@ class Robot(object):
             # TODO 2. Update parameters when learning
             # 更新时间
             if self.epsilon < 0.01:
-                self.epsilon = 0.01
+                self.epsilon = 0
             else:
                 # 随着时间变化更新epsilon，100:1.
                 # self.epsilon -= self.t * 0.1;
-                self.epsilon = self.epsilon0 / (self.t / 150 + 1)
+                self.epsilon = self.epsilon0 / (self.t / 100 + 1) 
+                # exp_value = math.exp(6 - 0.2 * self.t)
+                # self.epsilon = self.epsilon0 * (exp_value / (1 + exp_value))
             self.t += 1
         return self.epsilon
 
@@ -74,9 +77,7 @@ class Robot(object):
         # If Qtable[state] already exits, then do
         # not change it.
         # 判断state是否在字典中
-        if state in self.Qtable:
-            pass
-        else:
+        if state not in self.Qtable:
             # 初始化state对应键值
             self.Qtable[state] = {'u':0.0, 'r':0.0, 'd':0.0, 'l':0.0}
 
@@ -110,12 +111,11 @@ class Robot(object):
         Update the qtable according to the given rule.
         """
         if self.learning:
-            pass
             # TODO 8. When learning, update the q table according
             # to the given rules
             qOld = self.Qtable[self.state][action]
             qNextMax = float(max(self.Qtable[next_state].values()))
-            self.Qtable[self.state][action] = (1 - self.alpha) * qOld * + self.alpha * (r + self.gamma * qNextMax) 
+            self.Qtable[self.state][action] = (1 - self.alpha) * qOld + self.alpha * (r + self.gamma * qNextMax) 
 
 
     def update(self):

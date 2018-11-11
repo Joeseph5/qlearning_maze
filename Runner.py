@@ -35,6 +35,7 @@ class Runner(object):
             'success': [],
             'reward': [],
             'times': [],
+            'epsilon':[],
         }
         self.display_direction = display_direction
         # self.maze_data = {}
@@ -82,6 +83,7 @@ class Runner(object):
                 self.train_robot_statics['success'].append(0)
             self.train_robot_statics['reward'].append(accumulated_reward)
             self.train_robot_statics['times'].append(run_time)
+            self.train_robot_statics['epsilon'].append(self.robot.epsilon)
             self.maze.reset_robot()
             self.robot.reset()
 
@@ -91,6 +93,7 @@ class Runner(object):
         self.test_robot_statics['success'] = []
         self.test_robot_statics['reward'] = []
         self.test_robot_statics['times'] = []
+        self.test_robot_statics['epsilon'] = []
 
         self.robot.set_status(learning=False, testing=True)
 
@@ -109,6 +112,7 @@ class Runner(object):
             self.test_robot_statics['success'].append(0)
         self.test_robot_statics['reward'].append(accumulated_reward)
         self.test_robot_statics['times'].append(run_time)
+        self.train_robot_statics['epsilon'].append(self.robot.epsilon)
 
     # Generate video header
     def draw_header(self, base_image):
@@ -178,14 +182,17 @@ class Runner(object):
         writer.release()
 
     def plot_results(self):
-        plt.figure(figsize=(12,4))
-        plt.subplot(131)
+        plt.figure(figsize=(16,4))
+        plt.subplot(141)
         plt.title("Success Times")
         plt.plot(np.cumsum(self.train_robot_statics['success']))
-        plt.subplot(132)
+        plt.subplot(142)
         plt.title("Accumulated Rewards")
         plt.plot(np.array(self.train_robot_statics['reward']))
-        plt.subplot(133)
+        plt.subplot(143)
         plt.title("Runing Times per Epoch")
         plt.plot(np.array(self.train_robot_statics['times']))
+        plt.subplot(144)
+        plt.title("Epsilon per Epoch")
+        plt.plot(np.array(self.train_robot_statics['epsilon']))
         plt.show()
