@@ -77,9 +77,12 @@ class Robot(object):
         # If Qtable[state] already exits, then do
         # not change it.
         # 判断state是否在字典中
+        """
         if state not in self.Qtable:
             # 初始化state对应键值
             self.Qtable[state] = {'u':0.0, 'r':0.0, 'd':0.0, 'l':0.0}
+        """
+        self.Qtable.setdefault(state, {a: 0.0 for a in self.valid_actions})
 
     def choose_action(self):
         """
